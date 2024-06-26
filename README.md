@@ -1,2 +1,17 @@
-# traduccion-dirigida-por-sintaxis
-Implementar un traductor para el lenguaje Json simplificado. Recibe un archivo fuente Json, y debe retornar un archivo traducido con su traducción a XML o los errores encontrados en caso de existir. En caso de error se deberá implementar la estrategia de manejo de errores Panic Mode con sincronización y continuar el análisis.
+analizador-sintáctico-json
+Analizador sintáctico que recibe un archivo txt con contenido de lenguaje JSON y retorna los errores sintácticos en caso que hubiesen.
+
+Para la ejecución del programa seguir los siguientes pasos:
+
+1 - Se debe tener dentro de la carpeta fuente del proyecto el archivo "fuente.txt" con la fuente del JSON a analizar.
+
+2 - Ejecutar la consola de CMD y dirigirse a la carpeta del proyecto.
+
+3 - Ejecutar el comando python main.py
+
+4 - Se mostrará en consola el resultado del análisis sintáctico.
+
+Integrantes :
+
+Lucas Damián Goncalvez Basabe
+Iván Alfredo Sánchez Rojas
