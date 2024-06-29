@@ -1,5 +1,5 @@
 {  
-   "personas" false :[  
+   "personas" :[  
       {  
          "ci":1234567,
          "nombre":"Julio Pérez",

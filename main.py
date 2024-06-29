@@ -1,11 +1,11 @@
 import anlex
 from ansic import AnalizadorSintactico
+from traductor_a_xml import TraductorJsonAXml
 import sys
 
 def main():
     ruta_archivo = 'fuente.txt'
     ruta_salida = 'output.txt'
-
     try:
         #Analizador Lexico
         resultado, valido = anlex.analizar_archivo(ruta_archivo)
@@ -19,8 +19,10 @@ def main():
         if not valido:
             for error in errores:
                 print(error)
-        #
-        print("Análisis sintáctico completado.")
+            sys.exit()
+        # Traducción dirigida por sintaxis
+        traductor = TraductorJsonAXml(resultado)
+        xml = traductor.traducir()
     except IOError as e:
         print(f"Error al abrir el archivo: {e}")
     except Exception as e:
