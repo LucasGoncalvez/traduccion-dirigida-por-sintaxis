@@ -45,8 +45,10 @@ class TraductorJsonAXml:
             if self.token_actual[1] == simbolos["]"]:
                 self.match(simbolos["]"])
             elif self.token_actual[1] in [simbolos["{"], simbolos["["]]:
+                print("\n<item>")
                 self.element_list()
                 self.match(simbolos["]"])
+                print("</item>")
 
     def element_list(self):
         if self.token_actual[1] in [simbolos["{"], simbolos["["]]:
@@ -56,6 +58,8 @@ class TraductorJsonAXml:
     def element_list_aux(self):
         if self.token_actual[1] == simbolos[","]:
             self.match(simbolos[","])
+            print("</item>")
+            print("<item>")
             self.element()
             self.element_list_aux()
 
@@ -72,9 +76,18 @@ class TraductorJsonAXml:
 
     def attribute(self):
         if self.token_actual[1] == simbolos["string"]:
+            value_name = self.token_actual[2].replace('"', '')
+            print("<", end='')
+            print(value_name, end='') # sin comillas debe ser
+            print(">", end='')
+            #
             self.attribute_name()
             self.match(simbolos[":"])
             self.attribute_value()
+            #
+            print("</", end='')
+            print(value_name, end='') # sin comillas debe ser
+            print(">")
 
     def attribute_name(self):
         if self.token_actual[1] == simbolos["string"]:
@@ -84,14 +97,19 @@ class TraductorJsonAXml:
         if self.token_actual[1] == simbolos["{"] or self.token_actual[1] == simbolos["["]:
             self.element()
         elif self.token_actual[1] == simbolos["string"]:
+            print(self.token_actual[2], end='')
             self.match(simbolos["string"])
         elif self.token_actual[1] == simbolos["number"]:
+            print(self.token_actual[2], end='')
             self.match(simbolos["number"])
         elif self.token_actual[1] == simbolos["true"]:
+            print(self.token_actual[2], end='')
             self.match(simbolos["true"])
         elif self.token_actual[1] == simbolos["false"]:
+            print(self.token_actual[2], end='')
             self.match(simbolos["false"])
         elif self.token_actual[1] == simbolos["null"]:
+            print(self.token_actual[2], end='')
             self.match(simbolos["null"])
 
     #
