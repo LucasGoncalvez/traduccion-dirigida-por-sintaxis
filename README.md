@@ -1,5 +1,6 @@
-analizador-sintáctico-json
-Analizador sintáctico que recibe un archivo txt con contenido de lenguaje JSON y retorna los errores sintácticos en caso que hubiesen.
+<h1>Traducción dirigida por sintáxis</h1>
+<p>Traducción dirigida por sintáxis que recibe un archivo txt con contenido de lenguaje JSON y retorna la traducción a XML.</p>
+<p>Previamente a la traducción, se realiza el análisis léxico y sintáctico del JSON.</p>
 
 Para la ejecución del programa seguir los siguientes pasos:
 
@@ -9,9 +10,9 @@ Para la ejecución del programa seguir los siguientes pasos:
 
 3 - Ejecutar el comando python main.py
 
-4 - Se mostrará en consola el resultado del análisis sintáctico.
+4 - Se creará en la carpeta del proyecto el output de la traducción a XML.
 
 Integrantes :
 
-Lucas Damián Goncalvez Basabe
-Iván Alfredo Sánchez Rojas
+<li>Lucas Damián Goncalvez Basabe</li>
+<li>Iván Alfredo Sánchez Rojas</li>
