@@ -32,7 +32,7 @@ def main():
         print(f"Error al abrir el archivo: {e}")
     except Exception as e:
         print(f"Se produjo un error: {str(e)}")
-        print(f"Se produjo un error: {str(e)}")
+        
 
 if __name__ == "__main__":
     main()
