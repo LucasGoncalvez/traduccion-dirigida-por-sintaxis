@@ -1,17 +1,17 @@
 from tablaSimbolos import simbolos
 EOF = None
 
-
 class TraductorJsonAXml:
-    def __init__(self, lexemas):
+    def __init__(self, lexemas, output_file):
         self.lexemas = lexemas
+        self.output_file = output_file
         self.posicion_actual = -1
         self.token_actual = None # [0] es número de línea en el archivo, [1] es el token, [2] es el valor
         self.traduccion = None
         self.get_token()
 
     def get_token(self):
-        if self.posicion_actual < len(self.lexemas)-1:
+        if self.posicion_actual < len(self.lexemas) - 1:
             self.posicion_actual += 1
             self.token_actual = self.lexemas[self.posicion_actual]
         else:
@@ -25,11 +25,11 @@ class TraductorJsonAXml:
         self.element()
 
     def element(self):
-        if(self.token_actual[1] == simbolos["{"]):
+        if self.token_actual[1] == simbolos["{"]:
             self.object()
-        elif(self.token_actual[1] == simbolos["["]):
+        elif self.token_actual[1] == simbolos["["]:
             self.array()
-        
+
     def object(self):
         if self.token_actual[1] == simbolos["{"]:
             self.match(simbolos["{"])
@@ -45,10 +45,10 @@ class TraductorJsonAXml:
             if self.token_actual[1] == simbolos["]"]:
                 self.match(simbolos["]"])
             elif self.token_actual[1] in [simbolos["{"], simbolos["["]]:
-                print("\n<item>")
+                self.output_file.write("\n<item>\n")
                 self.element_list()
                 self.match(simbolos["]"])
-                print("</item>")
+                self.output_file.write("</item>\n")
 
     def element_list(self):
         if self.token_actual[1] in [simbolos["{"], simbolos["["]]:
@@ -58,8 +58,7 @@ class TraductorJsonAXml:
     def element_list_aux(self):
         if self.token_actual[1] == simbolos[","]:
             self.match(simbolos[","])
-            print("</item>")
-            print("<item>")
+            self.output_file.write("</item>\n<item>\n")
             self.element()
             self.element_list_aux()
 
@@ -77,17 +76,11 @@ class TraductorJsonAXml:
     def attribute(self):
         if self.token_actual[1] == simbolos["string"]:
             value_name = self.token_actual[2].replace('"', '')
-            print("<", end='')
-            print(value_name, end='') # sin comillas debe ser
-            print(">", end='')
-            #
+            self.output_file.write(f"<{value_name}>")
             self.attribute_name()
             self.match(simbolos[":"])
             self.attribute_value()
-            #
-            print("</", end='')
-            print(value_name, end='') # sin comillas debe ser
-            print(">")
+            self.output_file.write(f"</{value_name}>\n")
 
     def attribute_name(self):
         if self.token_actual[1] == simbolos["string"]:
@@ -97,22 +90,21 @@ class TraductorJsonAXml:
         if self.token_actual[1] == simbolos["{"] or self.token_actual[1] == simbolos["["]:
             self.element()
         elif self.token_actual[1] == simbolos["string"]:
-            print(self.token_actual[2], end='')
+            self.output_file.write(self.token_actual[2])
             self.match(simbolos["string"])
         elif self.token_actual[1] == simbolos["number"]:
-            print(self.token_actual[2], end='')
+            self.output_file.write(self.token_actual[2])
             self.match(simbolos["number"])
         elif self.token_actual[1] == simbolos["true"]:
-            print(self.token_actual[2], end='')
+            self.output_file.write(self.token_actual[2])
             self.match(simbolos["true"])
         elif self.token_actual[1] == simbolos["false"]:
-            print(self.token_actual[2], end='')
+            self.output_file.write(self.token_actual[2])
             self.match(simbolos["false"])
         elif self.token_actual[1] == simbolos["null"]:
-            print(self.token_actual[2], end='')
+            self.output_file.write(self.token_actual[2])
             self.match(simbolos["null"])
 
-    #
     def match(self, expected_token):
         if self.token_actual[1] == expected_token:
-                self.get_token()
+            self.get_token()
