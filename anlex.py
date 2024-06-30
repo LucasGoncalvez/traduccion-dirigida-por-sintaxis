@@ -5,10 +5,11 @@ def analizar_archivo(ruta_archivo):
     resultado = []
     valido = True
     MSG_ERROR = "<Lexema invalido>"
+    EOF = ''
     with open(ruta_archivo, 'r') as archivo:
         c = archivo.read(1)  # lee un solo caracter del archivo
         num_linea = 1
-        while c != '':  # mientras haya caracteres para leer
+        while c != EOF:  # mientras haya caracteres para leer
             lexema = ""
             if c == " " or c == "\t":
                 pass
@@ -21,12 +22,12 @@ def analizar_archivo(ruta_archivo):
                     c = archivo.read(1)
                     if not c.isdigit() and c != "." and c != "e": 
                         break
-                if c != '':
+                if c != EOF:
                     if tablaSimbolos.encuentra_coincidencia(lexema,tablaSimbolos.exp_reg["number"]):
-                        resultado.append([num_linea, tablaSimbolos.simbolos["number"]])
+                        resultado.append([num_linea, tablaSimbolos.simbolos["number"], lexema])
                     else:
                         valido = False
-                        resultado.append([num_linea, MSG_ERROR])
+                        resultado.append([num_linea, MSG_ERROR, None])
                     continue 
                 else:
                     break
@@ -35,17 +36,17 @@ def analizar_archivo(ruta_archivo):
                 while True:
                     lexema = lexema + c
                     c = archivo.read(1)
-                    if c == '"' or c == '': 
+                    if c == '"' or c == EOF: 
                         lexema = lexema + c
                         break
                     elif c == "\n":
                         break
-                if c != '':
+                if c != EOF:
                     if tablaSimbolos.encuentra_coincidencia(lexema,tablaSimbolos.exp_reg["string"]):
-                        resultado.append([num_linea, tablaSimbolos.simbolos["string"]])
+                        resultado.append([num_linea, tablaSimbolos.simbolos["string"], lexema])
                     else:
                         valido = False
-                        resultado.append([num_linea, MSG_ERROR]) 
+                        resultado.append([num_linea, MSG_ERROR, None]) 
                     pass
                 else:
                     break
@@ -54,11 +55,11 @@ def analizar_archivo(ruta_archivo):
                 c = archivo.read(3)
                 lexema = lexema + c
                 if tablaSimbolos.encuentra_coincidencia(lexema, tablaSimbolos.exp_reg["true"]):
-                    resultado.append([num_linea, tablaSimbolos.simbolos["true"]])
+                    resultado.append([num_linea, tablaSimbolos.simbolos["true"], lexema])
                 else:
                     valido = False
-                    resultado.append([num_linea, MSG_ERROR])       
-                if c == '':
+                    resultado.append([num_linea, MSG_ERROR, None])       
+                if c == EOF:
                     break
                 pass
             elif c == "f" or c == "F": # false FALSE
@@ -66,11 +67,11 @@ def analizar_archivo(ruta_archivo):
                 c = archivo.read(4)
                 lexema = lexema + c
                 if tablaSimbolos.encuentra_coincidencia(lexema, tablaSimbolos.exp_reg["false"]):
-                    resultado.append([num_linea, tablaSimbolos.simbolos["false"]])
+                    resultado.append([num_linea, tablaSimbolos.simbolos["false"], lexema])
                 else:
                     valido = False
-                    resultado.append([num_linea, MSG_ERROR])
-                if c == '':
+                    resultado.append([num_linea, MSG_ERROR, None])
+                if c == EOF:
                     break       
                 pass
             elif c == "n" or c == "N": # null NULL
@@ -78,40 +79,40 @@ def analizar_archivo(ruta_archivo):
                 c = archivo.read(3)
                 lexema = lexema + c
                 if tablaSimbolos.encuentra_coincidencia(lexema, tablaSimbolos.exp_reg["null"]):
-                    resultado.append([num_linea, tablaSimbolos.simbolos["null"]])
+                    resultado.append([num_linea, tablaSimbolos.simbolos["null"], lexema])
                 else:
                     valido = False
-                    resultado.append([num_linea, MSG_ERROR])
-                if c == '':
+                    resultado.append([num_linea, MSG_ERROR, None])
+                if c == EOF:
                     break      
                 pass
             elif c == "{":
-                resultado.append([num_linea, tablaSimbolos.simbolos["{"]])
+                resultado.append([num_linea, tablaSimbolos.simbolos["{"], c])
                 pass
             elif c == "[":
-                resultado.append([num_linea, tablaSimbolos.simbolos["["]])
+                resultado.append([num_linea, tablaSimbolos.simbolos["["], c])
                 pass
             elif c == "}":
-                resultado.append([num_linea, tablaSimbolos.simbolos["}"]])
+                resultado.append([num_linea, tablaSimbolos.simbolos["}"], c])
                 pass
             elif c == "]":
-                resultado.append([num_linea, tablaSimbolos.simbolos["]"]])
+                resultado.append([num_linea, tablaSimbolos.simbolos["]"], c])
                 pass
             elif c == ",":
-                resultado.append([num_linea, tablaSimbolos.simbolos[","]])
+                resultado.append([num_linea, tablaSimbolos.simbolos[","], c])
                 pass
             elif c == ":":
-                resultado.append([num_linea, tablaSimbolos.simbolos[":"]])
+                resultado.append([num_linea, tablaSimbolos.simbolos[":"], c])
                 pass
             c = archivo.read(1)  # Lee el siguiente caracter del archivo
-        if c == '':
-            print("Analizacion finalizada")
+        if c == EOF:
+            pass
     
     return resultado, valido
 
 def guardar_resultado(resultado, ruta_salida):
     lineas = {}
-    for numero_linea, contenido in resultado:
+    for numero_linea, contenido, valor in resultado:
         if numero_linea in lineas:
             lineas[numero_linea].append(contenido)
         else:
